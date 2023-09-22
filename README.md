@@ -1,2 +1,1 @@
-moimoimoi
 # FullStack-palutusrepo
