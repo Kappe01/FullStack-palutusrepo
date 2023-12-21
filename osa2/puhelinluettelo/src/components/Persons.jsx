@@ -1,5 +1,3 @@
-import axios from "axios"
-
 const Persons = ({persons, del}) => {
     return (
         <div>

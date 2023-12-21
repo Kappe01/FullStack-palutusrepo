@@ -5,6 +5,7 @@ import Notification from './components/Notification'
 import ErrorMessage from './components/ErrorMessage'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
+const baseUrl = '/api/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -17,7 +18,7 @@ const App = () => {
 
   const hook = () => {
     axios
-      .get('http://localhost:3001/persons')
+      .get(baseUrl)
       .then(response => {
         setPersons(response.data)
       })
@@ -27,7 +28,7 @@ const App = () => {
 
   const sendData = (object) => {
     axios
-      .post('http://localhost:3001/persons', object)
+      .post(baseUrl, object)
       .then((response => {
         setPersons(persons.concat(response.data))
         setSuccessmessage(
@@ -37,11 +38,14 @@ const App = () => {
           setSuccessmessage(null)
         }, 3000)
       }))
+      .catch(error => {
+        setErrorMessage(`${error.response.data.error}`)
+      })
   }
 
   const updateNumber = (id, updatedata) => {
     axios
-      .put(`http://localhost:3001/persons/${id}`, updatedata)
+      .put(`${baseUrl}/${id}`, updatedata)
       .then((response => {
         const updatedIndex = persons.findIndex((person) => person.id === id)
 
@@ -85,10 +89,10 @@ const App = () => {
   const del = (person, id) => {
     if (window.confirm(`Delete ${person.name}`)) {
         axios
-            .delete(`http://localhost:3001/persons/${id}`)
+            .delete(`${baseUrl}/${id}`)
             .then(() => {
                 axios
-                    .get('http://localhost:3001/persons')
+                    .get(baseUrl)
                     .then(response => 
                         setPersons(response.data))
 
@@ -104,7 +108,7 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
-    axios.get('http://localhost:3001/persons')
+    axios.get(baseUrl)
       .then((response) => {
       const persons = response.data;
     
@@ -128,8 +132,8 @@ const App = () => {
         }
         setNewName('')
         setNewNumber('')
-        })
-      }
+      })
+  }
       
     
 
