@@ -66,10 +66,9 @@ const App = () => {
 
   const deleteBlog = async blog => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`))
-    await blogService.remove(blog.id)
+      await blogService.remove(blog.id)
     const blogs = await blogService.getAll()
     setBlogs( blogs )
-    
   }
 
   const handleLogout = (event) => {
@@ -135,7 +134,7 @@ const App = () => {
           <button onClick={handleLogout}>Logout</button></p>
         {blogForm()}
         {sortBlogsByLikes(blogs).map(blog =>
-          <Blog key={blog.id} blog={blog} deleteBlog={deleteBlog} addLike={addLike}/>
+          <Blog key={blog.id} blog={blog} deleteBlog={deleteBlog} addLike={addLike} name={JSON.parse(window.localStorage.getItem('loggedBlogappUser')).name}/>
         )}
       </div>
       }
