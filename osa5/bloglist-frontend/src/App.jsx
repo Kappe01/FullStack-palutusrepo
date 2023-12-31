@@ -50,7 +50,7 @@ const App = () => {
     await blogService.update(
       blog.id,
       {
-        'user': JSON.parse(window.localStorage.getItem('loggedBlogappUser')).token,
+        'user': blog.user.id,
         'likes': blog.likes + 1,
         'author':blog.author,
         'title':blog.title,
@@ -126,6 +126,7 @@ const App = () => {
 
   return (
     <div>
+      <h2>Blogs</h2>
       <Notification message={successMessage} />
       <ErrorMessage message={errorMessage} />
       {!user && loginForm()}
@@ -133,11 +134,11 @@ const App = () => {
         <p>{user.name} logged in
           <button onClick={handleLogout}>Logout</button></p>
         {blogForm()}
-        {sortBlogsByLikes(blogs).map(blog =>
-          <Blog key={blog.id} blog={blog} deleteBlog={deleteBlog} addLike={addLike} name={JSON.parse(window.localStorage.getItem('loggedBlogappUser')).name}/>
-        )}
       </div>
       }
+      {sortBlogsByLikes(blogs).map(blog =>
+          <Blog key={blog.id} blog={blog} deleteBlog={deleteBlog} addLike={addLike} user={user}/>
+        )}
     </div>
   )
 }
