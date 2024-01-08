@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit"
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -7,7 +9,7 @@ const anecdotesAtStart = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
 
-const getId = () => (100000 * Math.random()).toFixed(0)
+export const getId = () => (100000 * Math.random()).toFixed(0)
 
 const asObject = (anecdote) => {
   return {
@@ -19,54 +21,29 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-  switch (action.type) {
-    case 'VOTE':
+const anecdoteSlice = createSlice({
+  name: 'anecdotes',
+  initialState: initialState,
+  reducers: {
+    addAnecdote(state, action) {
+      const { content, id, votes } = action.payload
+      state.push({
+        content, id, votes
+      })
+    },
+    addVote(state, action) {
       const id = action.payload.id
       const anecdoteToVote = state.find((anecdote) => anecdote.id === id)
 
       if (anecdoteToVote) {
-        const updatedAnecdote = {
-          ...anecdoteToVote,
-          votes: anecdoteToVote.votes + 1
-        }
-
-        return state.map((anecdote) =>
-          anecdote.id !== id ? anecdote : updatedAnecdote
-        )
+        anecdoteToVote.votes += 1
       }
-      return state
-    case 'ADD':
-      return [...state, action.payload]
-    case 'SORT_BY_VOTES':
+    },
+    sort_anecdotes(state) {
       return state.slice().sort((a,b) => b.votes - a.votes)
-    default:
-      return state
-  }
-}
-
-export const sort_anecdotes = () => {
-  return { type: 'SORT_BY_VOTES' }
-}
-
-export const addVote = (id) => {
-  return {
-    type: 'VOTE',
-    payload: { id }
-  }
-}
-
-export const addAnecdote = (content) => {
-  return {
-    type: 'ADD',
-    payload: {
-      content,
-      id: getId(),
-      votes: 0
     }
   }
-}
+})
 
-export default reducer
+export const { sort_anecdotes, addVote, addAnecdote } = anecdoteSlice.actions
+export default anecdoteSlice.reducer
